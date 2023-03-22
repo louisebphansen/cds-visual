@@ -1,5 +1,6 @@
 # generic tools
 import numpy as np
+import cv2
 
 # tools from sklearn
 from sklearn.datasets import fetch_openml
@@ -77,6 +78,39 @@ def cifar_data():
                 "ship", 
                 "truck"]
         
-        X_train_data, X_test_data = prep_data(X_train, X_test)
+        X_train_data, X_test_data = prep_data_cifar(X_train, X_test)
 
-        return X_train_data, X_test_data, X_test, y_test
+        return X_train_data, X_test_data, y_train, y_test
+
+
+def build_nn(X_train, X_test, y_train, y_test, input_size, first_layer, second_layer, output_size):
+    
+    lb = LabelBinarizer()
+    y_train = lb.fit_transform(y_train)
+    y_test = lb.fit_transform(y_test)
+
+    model = Sequential()
+    model.add(Dense(first_layer, 
+                input_shape=(input_size,), 
+                activation="relu"))
+    model.add(Dense(second_layer, activation="relu"))
+    model.add(Dense(output_size, activation="softmax"))
+
+    sgd = SGD(0.01)
+
+    model.compile(loss="categorical_crossentropy", optimizer=sgd, metrics=["accuracy"])
+
+    history = model.fit(X_train, y_train, 
+                    validation_data=(X_test, y_test), 
+                    epochs=10, 
+                    batch_size=32)
+
+    print("[INFO] evaluating network...")
+    predictions = model.predict(X_test, batch_size=32)
+
+
+    report = (classification_report(y_test.argmax(axis=1), 
+                                predictions.argmax(axis=1), 
+                                target_names=[str(x) for x in lb.classes_]))
+
+    return report

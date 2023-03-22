@@ -1,0 +1,2 @@
+python3 neural_network.py --data mnist --input_size 784 --first_layer 256 --second_layer 128 --output_size 10
+python3 neural_network.py --data cifar --input_size 1024 --first_layer 512 --second_layer 120 --output_size 10
