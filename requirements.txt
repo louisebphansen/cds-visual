@@ -4,8 +4,4 @@ tqdm
 matplotlib
 scikit-learn
 tensorflow-cpu
-<<<<<<< HEAD
-opencv-python
-=======
 tensorflow-hub
->>>>>>> 686fcbf81b8c3b08d26db04f8cc8daee33c5bb01
